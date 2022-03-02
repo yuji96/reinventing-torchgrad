@@ -8,26 +8,33 @@ class Variable:
         self.value = value
 
         self.grad = 1
-        self.next: Variable = None
+        self.backs: list[Variable] = []
 
     def __eq__(self, other: "Variable") -> bool:
         if isinstance(other, Variable):
             other = other.value
         return self.value == other
 
-    def backward(self):
-        next = self.next
-        if next:
-            return self.next.backward() * self.grad
-        else:
+    def __repr__(self):
+        return self.value
+
+    def backward(self) -> Number:
+        if not self.backs:
             return self.grad
+
+        for back in self.backs:
+            back.backward(back.grad * self.grad)
 
     def __add__(self, other: Union[Number, "Variable"]) -> "Variable":
         if isinstance(other, Number):
-            self.next = Variable(self.value + other)
+            next = Variable(self.value + other)
         else:
-            self.next = Variable(self.value + other.value)
-        return self.next
+            next = Variable(self.value + other.value)
+            next.backs.append(other)
+            next.backs.append(self)
+        return next
+
+    __radd__ = __add__
 
     def __neg__(self) -> "Variable":
         self.value *= -1
@@ -39,19 +46,22 @@ if __name__ == "__main__":
     # y = a + 5
     a = Variable(3)
     y = a + 5
+    y.backward()
     assert y == 8
-    assert a.backward() == 1
+    assert a.grad == 1
 
     # y = a + b + 5
     a = Variable(3)
     b = Variable(3)
     y = a + b + 5
+    y.backward()
     assert y == 11
-    assert a.backward() == 1
-    assert b.backward() == 1
+    assert a.grad == 1
+    assert b.grad == 1
 
     # y = -a
     a = Variable(3)
     y = -a
+    y.backward()
     assert y == -3
-    assert a.backward() == -1
+    assert a.grad == -1
