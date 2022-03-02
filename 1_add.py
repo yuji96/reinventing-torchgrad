@@ -1,6 +1,3 @@
-from typing import Union
-
-
 class Variable:
 
     def __init__(self, value):
@@ -22,16 +19,18 @@ class Variable:
             return self.grad
 
         for back in self.backs:
-            back.backward(back.grad * self.grad)
+            back.grad *= self.grad
+            back.backward()
 
     def __add__(self, other) -> "Variable":
         if isinstance(other, Variable):
             next = Variable(self.value + other.value)
             next.backs.append(other)
-            next.backs.append(self)
+            return next
         else:
-            next = Variable(self.value + other)
-        return next
+            self.value += other
+            # self.grad 不変
+            return self
 
     __radd__ = __add__
 
