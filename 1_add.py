@@ -1,10 +1,9 @@
-from numbers import Number
 from typing import Union
 
 
 class Variable:
 
-    def __init__(self, value: Number):
+    def __init__(self, value):
         self.value = value
 
         self.grad = 1
@@ -18,20 +17,20 @@ class Variable:
     def __repr__(self):
         return self.value
 
-    def backward(self) -> Number:
+    def backward(self):
         if not self.backs:
             return self.grad
 
         for back in self.backs:
             back.backward(back.grad * self.grad)
 
-    def __add__(self, other: Union[Number, "Variable"]) -> "Variable":
-        if isinstance(other, Number):
-            next = Variable(self.value + other)
-        else:
+    def __add__(self, other) -> "Variable":
+        if isinstance(other, Variable):
             next = Variable(self.value + other.value)
             next.backs.append(other)
             next.backs.append(self)
+        else:
+            next = Variable(self.value + other)
         return next
 
     __radd__ = __add__
