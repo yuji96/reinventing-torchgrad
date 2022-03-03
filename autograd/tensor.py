@@ -31,11 +31,12 @@ class Tensor:
     __radd__ = __add__
 
     def __sub__(self, other) -> "Tensor":
-        """引き算"""
-        return -1 * other + self
+        """引き算 (self - other)"""
+        return self + (-other)
 
-    def __rsub__(other, self) -> "Tensor":
-        return other - self
+    def __rsub__(self, other) -> "Tensor":
+        """引き算 (other - self)"""
+        return other + (-self)
 
     def __mul__(self, other) -> "Tensor":
         """掛け算"""
@@ -46,20 +47,22 @@ class Tensor:
     __rmul__ = __mul__
 
     def __truediv__(self, other) -> "Tensor":
-        """割り算"""
-        return 1 / other * self
+        """割り算 (self / other)"""
+        return self * other**-1
 
     def __rtruediv__(self, other) -> "Tensor":
+        """割り算 (other / self)"""
         return other * self**-1
 
     def __pow__(self, other) -> "Tensor":
-        """べき乗"""
+        """べき乗 (self ** other)"""
         # TODO: 確認
         pow = Pow(self, other)
         next = Tensor(pow.calc_forward(), pow)
         return next
 
     def __rpow__(self, other) -> "Tensor":
+        """べき乗 (other ** self)"""
         pow = Pow(other, self)
         next = Tensor(pow.calc_forward(), pow)
         return next

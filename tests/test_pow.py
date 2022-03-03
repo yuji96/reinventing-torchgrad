@@ -1,17 +1,15 @@
 import math
 
-from autograd import Tensor
+from autograd import Tensor, exp
 
 
 def test_1():
-    """y = a + a + b"""
-    a = Tensor(2)
-    b = Tensor(4)
-    y = a**b
+    """y = exp(x)"""
+    x = Tensor(2)
+    y = exp(x)
     y.backward()
-    assert y.value == 16
-    assert a.grad == 32
-    assert b.grad == math.log(2) * 2**4
+    assert y.value == math.e**2
+    assert x.grad == math.e**2
 
 
 def test_2():
@@ -30,4 +28,3 @@ def test_3():
     y.backward()
     assert y.value == math.sqrt(3), y.value
     assert math.isclose(w.grad, 1 / (2 * math.sqrt(3)))
-
