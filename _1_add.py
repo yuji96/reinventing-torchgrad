@@ -12,7 +12,10 @@ class Variable:
         return self.value == other
 
     def __repr__(self):
-        return self.value
+        return self.value.__repr__()
+
+    def __str__(self):
+        return self.value.__str__()
 
     def backward(self):
         if not self.backs:
@@ -25,7 +28,7 @@ class Variable:
     def __add__(self, other) -> "Variable":
         if isinstance(other, Variable):
             next = Variable(self.value + other.value)
-            next.backs.append(other)
+            next.backs.extend([self, other])
             return next
         else:
             self.value += other
@@ -56,6 +59,13 @@ if __name__ == "__main__":
     assert y == 11
     assert a.grad == 1
     assert b.grad == 1
+
+    # y = a + a
+    a = Variable(3)
+    y = a + a
+    y.backward()
+    assert y == 6
+    assert a.grad == 2
 
     # y = -a
     a = Variable(3)
