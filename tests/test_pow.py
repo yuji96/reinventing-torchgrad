@@ -31,11 +31,3 @@ def test_3():
     assert y.value == math.sqrt(3), y.value
     assert math.isclose(w.grad, 1 / (2 * math.sqrt(3)))
 
-
-def test_4():
-    """y = 6 / w = w**(-1) * 6"""
-    w = Tensor(3)
-    y = w / 6
-    y.backward()
-    assert y.value == 1 / 2
-    assert w.grad == 1 / 6

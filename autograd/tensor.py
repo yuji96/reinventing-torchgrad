@@ -12,10 +12,11 @@ class Tensor:
     def __repr__(self) -> str:
         return f"Tensor({self.value}, grad_fn={self.operator})"
 
-    def backward(self, grad: Number = 1) -> None:
+    def backward(self, grad: Number = 1) -> "Tensor":
         self.grad += grad
         if self.operator:
             self.operator.calc_backward(self.grad)
+        return self
 
     def __neg__(self) -> "Tensor":
         """符号反転"""
@@ -33,17 +34,22 @@ class Tensor:
 
     def __mul__(self, other) -> "Tensor":
         """掛け算"""
-        print(self, other)
         mul = Mul(self, other)
         next = Tensor(mul.calc_forward(), mul)
         return next
 
+    __rmul__ = __mul__
+
     def __truediv__(self, other) -> "Tensor":
         """割り算"""
-        return self * other**-1
+        return 1 / other * self
+
+    def __rtruediv__(self, other) -> "Tensor":
+        return other * self**-1
 
     def __pow__(self, other) -> "Tensor":
         """べき乗"""
+        # TODO: 確認
         pow = Pow(self, other)
         next = Tensor(pow.calc_forward(), pow)
         return next
