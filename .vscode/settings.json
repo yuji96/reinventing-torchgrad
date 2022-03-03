@@ -1,0 +1,25 @@
+{
+  // pythonの自動整形
+  "files.eol": "\n", // 改行コードは「LF」
+  "python.linting.enabled": true, // 文法チェックを行う
+  "python.linting.pylintEnabled": false, // pylint は使わない
+  "python.linting.flake8Enabled": true, // 文法チェックにflake8 を使う
+  "python.linting.flake8Args": [ // flake8 の設定
+    "--indent-size=4",
+    "--max-line-length=150"
+  ],
+  "python.formatting.provider": "yapf", // 自動整形に yapf を使う
+  "python.formatting.yapfArgs": [
+    "--style={column_limit: 84, indent_width: 4, SPLIT_BEFORE_NAMED_ASSIGNS=False}"
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python",
+    "editor.tabSize": 4, // インデントレベルは「4」
+    "editor.formatOnSave": true, // 保存時に自動整形を行う
+    "editor.formatOnPaste": false, // ペースト時に自動整形を行わない
+    "editor.formatOnType": false, // 入力中に自動整形を行わない
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true // import 順を整列する
+    },
+  }
+}
