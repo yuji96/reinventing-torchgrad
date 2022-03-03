@@ -13,15 +13,15 @@ class Operator:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}"
 
+    @property
+    def values(self):
+        return self.a.value, self.b.value
+
     def calc_forward(self) -> Number:
         raise NotImplementedError
 
     def calc_backward(self) -> None:
         raise NotImplementedError
-
-
-class Neg(Operator):
-    pass
 
 
 class Add(Operator):
