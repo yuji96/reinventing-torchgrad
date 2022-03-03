@@ -41,8 +41,11 @@ class Add:
 
 if __name__ == "__main__":
     a = tensor(5)
-    y = a + a + a
+    b = tensor(5)
+    y = a + a + b
     y.backward()
-    print(a)
     print(y)
+    print(a)
+    print(b)
     print(a.grad)
+    print(b.grad)
