@@ -49,3 +49,7 @@ def log(a: Tensor) -> Tensor:
 def relu(a: Tensor) -> Tensor:
     _relu = ReLU(a)
     return Tensor(_relu.calc_forward(), _relu)
+
+
+def exp(a: Tensor) -> Tensor:
+    return math.e**a

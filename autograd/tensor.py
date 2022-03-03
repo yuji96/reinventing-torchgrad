@@ -28,9 +28,14 @@ class Tensor:
         next = Tensor(add.calc_forward(), add)
         return next
 
+    __radd__ = __add__
+
     def __sub__(self, other) -> "Tensor":
         """引き算"""
         return -1 * other + self
+
+    def __rsub__(other, self) -> "Tensor":
+        return other - self
 
     def __mul__(self, other) -> "Tensor":
         """掛け算"""
@@ -54,9 +59,10 @@ class Tensor:
         next = Tensor(pow.calc_forward(), pow)
         return next
 
-    __radd__ = __add__
-    __rmul__ = __mul__
-    # TODO: 非対称の演算はどうなるんだろう
+    def __rpow__(self, other) -> "Tensor":
+        pow = Pow(other, self)
+        next = Tensor(pow.calc_forward(), pow)
+        return next
 
 
 from .operators import Add, Mul, Operator, Pow  # noqa
