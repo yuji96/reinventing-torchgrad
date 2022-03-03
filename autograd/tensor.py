@@ -27,22 +27,10 @@ class Tensor:
         next = Tensor(mul.calc_forward(), mul)
         return next
 
-
-class Operator:
-
-    def __init__(self, a, b) -> None:
-        self.a = a if isinstance(a, Tensor) else Tensor(a)
-        self.b = b if isinstance(b, Tensor) else Tensor(b)
-
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}"
-
-    # TODO: インテリセンス効いてる？
-    def calc_forward(self) -> Number:
-        raise NotImplementedError
-
-    def calc_backward(self) -> None:
-        raise NotImplementedError
+    def __pow__(self, other) -> "Tensor":
+        pow = Pow(self, other)
+        next = Tensor(pow.calc_forward(), pow)
+        return next
 
 
-from .operators import Add, Mul  # noqa
+from .operators import Add, Mul, Operator, Pow  # noqa
