@@ -2,6 +2,14 @@ from numbers import Number
 from typing import Optional
 
 
+def asymmetric(method):
+
+    def swap(self, other) -> Tensor:
+        return method(other, self)
+
+    return swap
+
+
 class Tensor:
 
     def __init__(self, value: Number, operator: Optional["Operator"] = None):
@@ -28,15 +36,9 @@ class Tensor:
         next = Tensor(add.calc_forward(), add)
         return next
 
-    __radd__ = __add__
-
     def __sub__(self, other) -> "Tensor":
         """引き算 (self - other)"""
         return self + (-other)
-
-    def __rsub__(self, other) -> "Tensor":
-        """引き算 (other - self)"""
-        return other + (-self)
 
     def __mul__(self, other) -> "Tensor":
         """掛け算"""
@@ -44,28 +46,21 @@ class Tensor:
         next = Tensor(mul.calc_forward(), mul)
         return next
 
-    __rmul__ = __mul__
-
     def __truediv__(self, other) -> "Tensor":
         """割り算 (self / other)"""
         return self * other**-1
 
-    def __rtruediv__(self, other) -> "Tensor":
-        """割り算 (other / self)"""
-        return other * self**-1
-
     def __pow__(self, other) -> "Tensor":
         """べき乗 (self ** other)"""
-        # TODO: 確認
         pow = Pow(self, other)
         next = Tensor(pow.calc_forward(), pow)
         return next
 
-    def __rpow__(self, other) -> "Tensor":
-        """べき乗 (other ** self)"""
-        pow = Pow(other, self)
-        next = Tensor(pow.calc_forward(), pow)
-        return next
+    __radd__ = __add__
+    __rsub__ = asymmetric(__sub__)
+    __rmul__ = __mul__
+    __rtruediv__ = asymmetric(__truediv__)
+    __rpow__ = asymmetric(__pow__)
 
 
 from .operators import Add, Mul, Operator, Pow  # noqa
