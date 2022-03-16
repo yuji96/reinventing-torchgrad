@@ -1,10 +1,12 @@
 from numbers import Number
-from typing import Optional
+from typing import Iterable, Optional, Union
+
+import numpy as np
 
 
 def asymmetric(method):
 
-    def swap(self, other) -> Tensor:
+    def swap(self, other) -> "Tensor":
         return method(other, self)
 
     return swap
@@ -12,15 +14,18 @@ def asymmetric(method):
 
 class Tensor:
 
-    def __init__(self, value: Number, operator: Optional["Operator"] = None):
-        self.value = value
+    def __init__(self, value: Union[Number, Iterable],
+                 operator: Optional["Operator"] = None):
+        self.value = np.array(value, dtype=float)
         self.operator = operator
         self.grad = 0
 
     def __repr__(self) -> str:
         return f"Tensor({self.value}, grad_fn={self.operator})"
 
-    def backward(self, grad: Number = 1) -> "Tensor":
+    def backward(self, grad: Number = None) -> "Tensor":
+        if grad is None:
+            grad = np.ones_like(self.value)
         self.grad += grad
         if self.operator:
             self.operator.calc_backward(self.grad)

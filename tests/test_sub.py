@@ -28,3 +28,12 @@ def test_3():
     assert y.value == 6
     assert a.grad == 2
     assert b.grad == -1
+
+
+def test_4():
+    """y = 1 - a"""
+    a = Tensor([1, 2, 3])
+    y = 1 - a
+    y.backward()
+    assert (y.value == 1 - a.value).all()
+    assert (a.grad == -1).all()

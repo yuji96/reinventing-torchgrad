@@ -59,3 +59,14 @@ def test_6():
     assert y.value == 14
     assert a.grad == 6
     assert b.grad == 1
+
+
+def test_7():
+    """y = a * a + b"""
+    a = Tensor([1, 2, 3])
+    b = Tensor([4, 5, 6])
+    y = a * a + b
+    y.backward()
+    assert (y.value == a.value ** 2 + b.value).all()
+    assert (a.grad == 2 * a.value).all()
+    assert (b.grad == 1).all()

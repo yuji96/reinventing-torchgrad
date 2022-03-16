@@ -1,5 +1,6 @@
-import math
 from numbers import Number
+
+import numpy as np
 
 from .tensor import Tensor
 
@@ -53,4 +54,4 @@ class Pow(Operator):
         a = self.a.value
         b = self.b.value
         self.a.backward(grad * b * a**(b - 1))
-        self.b.backward(grad * math.log(a) * a**b)
+        self.b.backward(grad * np.log(a) * a**b)

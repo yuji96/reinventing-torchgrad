@@ -1,5 +1,6 @@
-import math
 from numbers import Number
+
+import numpy as np
 
 from .tensor import Tensor
 
@@ -22,7 +23,7 @@ class Transformer:
 class Log(Transformer):
 
     def calc_forward(self) -> Number:
-        return math.log(self.a.value)
+        return np.log(self.a.value)
 
     def calc_backward(self, grad) -> None:
         self.a.backward(grad / self.a.value)
@@ -31,14 +32,10 @@ class Log(Transformer):
 class ReLU(Transformer):
 
     def calc_forward(self) -> Number:
-        return max(0, self.a.value)
+        return np.maximum(0, self.a.value)
 
-    def calc_backward(self, grad) -> None:
-        a = self.a.value
-        if a > 0:
-            self.a.backward(grad)
-        else:
-            self.a.backward(0)
+    def calc_backward(self, grad: np.ndarray) -> None:
+        self.a.backward(np.where(self.a.value > 0, grad, 0))
 
 
 def log(a: Tensor) -> Tensor:
@@ -52,4 +49,4 @@ def relu(a: Tensor) -> Tensor:
 
 
 def exp(a: Tensor) -> Tensor:
-    return math.e**a
+    return np.e**a
