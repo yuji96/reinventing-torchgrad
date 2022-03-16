@@ -18,7 +18,7 @@ class Tensor:
                  operator: Optional["Operator"] = None):
         self.value = np.array(value, dtype=float)
         self.operator = operator
-        self.grad = 0
+        self.grad = 0.0
 
     def __repr__(self) -> str:
         return f"Tensor({self.value}, grad_fn={self.operator})"
